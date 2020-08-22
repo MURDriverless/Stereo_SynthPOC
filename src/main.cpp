@@ -1,69 +1,105 @@
 #include <iostream>
 #include <mutex>
-#include <pthread.h>
+#include <thread>
 #include <chrono>
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/calib3d.hpp>
 
-class StereoCam {
-    private:
-        cv::VideoCapture fileL;
-        cv::VideoCapture fileR;
-        
-        int frameRate;
-        int lastFrame = -1;
-        std::chrono::system_clock::time_point startTime;
-    public:
-        StereoCam(std::string pathL, std::string pathR) {
-            fileL = cv::VideoCapture(pathL);
-            fileR = cv::VideoCapture(pathR);
-
-            frameRate = fileL.get(cv::CAP_PROP_FPS);
-            startTime = std::chrono::high_resolution_clock::now();
-        }
-
-        bool grabFrame(cv::Mat &leftFrame, cv::Mat &rightFrame) {
-            auto now = std::chrono::high_resolution_clock::now();
-            int nowFrame = std::chrono::duration_cast<std::chrono::milliseconds>(now - startTime).count() * frameRate / 1000;
-
-            if (nowFrame <= lastFrame) {
-                return false;
-            }
-
-            if (lastFrame + 1 != nowFrame) {
-                // fileL.set(cv::CAP_PROP_POS_FRAMES, nowFrame);
-                // fileR.set(cv::CAP_PROP_POS_FRAMES, nowFrame);
-            }
-
-
-            fileL.read(leftFrame);
-            fileR.read(rightFrame);
-
-            // lastFrame = nowFrame;
-            return true;
-        }
+struct FrameBuffer {
+    std::mutex mutexLock;
+    cv::Mat frame;
+    int frameNum = -1;
+    bool eof = false;
 };
 
+struct ProducerArgs {
+    FrameBuffer* frameBuffer;
+    std::string filePath;
+};
+
+void frameProducer(ProducerArgs *producerArgs);
+
 int main(int argc, char** argv) {
-    StereoCam stereoCam("../output_L.mp4", "../output_R.mp4");
+    FrameBuffer lBuffer;
+    ProducerArgs leftArgs;
+    leftArgs.frameBuffer = &lBuffer;
+    leftArgs.filePath = "../output_R.mp4";
 
-    cv::Mat lFrame, rFrame;
+    std::thread producerL(frameProducer, &leftArgs);
 
-    auto now = std::chrono::high_resolution_clock::now();
-    auto then = std::chrono::high_resolution_clock::now();
+    cv::FileStorage fs;
+    fs.open("../calibration.xml", cv::FileStorage::READ);
+
+    cv::Mat cameraMatrix;
+    cv::Mat distCoeffs;
+    cv::Size calibSize;
+
+    fs["cameraMatrix"] >> cameraMatrix;
+    fs["distCoeffs"] >> distCoeffs;
+    fs["calibImageSize"] >> calibSize;
+
+    cv::Mat newCameraMatrix = cv::getOptimalNewCameraMatrix(cameraMatrix, distCoeffs, calibSize, 0.0);
+
+    int lastFrame = -1;
+    cv::Mat frameCopy, unDist;
     cv::namedWindow("Frame", 0);
     while (true) {
-        if (stereoCam.grabFrame(lFrame, rFrame)) {
-            cv::imshow("Frame", lFrame);
-            cv::resizeWindow("Frame", 600, 300);
-            cv::waitKey(1);
+        bool valid = false;
+        lBuffer.mutexLock.lock();
+        if (lastFrame < lBuffer.frameNum) {
+            frameCopy = lBuffer.frame.clone();
+            lastFrame = lBuffer.frameNum;
+            valid = true;
         }
-        auto now = std::chrono::high_resolution_clock::now();
-        float deltaT = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
-        std::cout << 1000.0 / (deltaT) << std::endl;
-        then = now;
+        lBuffer.mutexLock.unlock();
+
+        if (lBuffer.eof) {
+            break;
+        }
+
+        if (frameCopy.empty() || !valid) {
+            continue;
+        }
+
+        cv::undistort(frameCopy, unDist, cameraMatrix, distCoeffs, newCameraMatrix);
+
+        cv::imshow("Frame", unDist);
+        cv::resizeWindow("Frame", 1000, 600);
+        cv::waitKey(1);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
+    cv::destroyAllWindows();
+    producerL.join();
+
     return 0;
+}
+
+void frameProducer(ProducerArgs *producerArgs) {
+    FrameBuffer *frameBuffer = producerArgs->frameBuffer;
+    cv::VideoCapture videoFile(producerArgs->filePath);
+    auto frameTime = std::chrono::milliseconds(static_cast<int64_t>(1000.0/videoFile.get(cv::CAP_PROP_FPS)));
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    std::cout << frameTime.count() << std::endl;
+
+    while (true) {
+        auto now = std::chrono::high_resolution_clock::now();
+
+        frameBuffer->mutexLock.lock();
+        videoFile.read(frameBuffer->frame);
+        frameBuffer->frameNum++;
+        frameBuffer->mutexLock.unlock();
+
+        if (frameBuffer->frame.empty()) {
+            frameBuffer->eof = true;
+            return;
+        }
+
+        auto now2 = std::chrono::high_resolution_clock::now();
+        std::this_thread::sleep_for(frameTime - (now2 - now));
+    }
 }
