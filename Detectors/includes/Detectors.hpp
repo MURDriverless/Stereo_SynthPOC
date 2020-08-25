@@ -2,7 +2,7 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/core/cuda.hpp>
-#include "Yolo3Detection.h"
+#include "tkDNN/Yolo3Detection.h"
 #include "KeypointDetector.hpp"
 
 struct ConeROI {
