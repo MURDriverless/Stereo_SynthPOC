@@ -46,8 +46,8 @@ int main(int argc, char** argv) {
     FrameBuffer frameBuffer;
     ProducerArgs producerArgs;
     producerArgs.frameBuffer = &frameBuffer;
-    producerArgs.lFilePath = "../output_L.mp4";
-    producerArgs.rFilePath = "../output_R.mp4";
+    producerArgs.lFilePath = "../track3_L.mp4";
+    producerArgs.rFilePath = "../track3_R.mp4";
 
     std::thread producerL(frameProducer, &producerArgs);
 
@@ -193,10 +193,6 @@ int main(int argc, char** argv) {
                 roiMask.push_back(coneROI.roiRect);
                 roiMask.push_back(projRect);
 
-                if (i > 0) {
-                    continue;
-                }
-
                 try {
                     cv::Mat unDist1_cropped = lUnDist_clean(coneROI.roiRect);
                     cv::Mat unDist2_cropped = rUnDist_clean(projRect);
@@ -251,9 +247,10 @@ int main(int argc, char** argv) {
                     float medDisp = disparity[(int) disparity.size()/2];
                     float zEst = B*f2/medDisp;
                     float xEst = zEst*(coneROI.roiRect.x + coneROI.roiRect.width/2 - width1/2)/f1;
+                    float yEst = zEst*(coneROI.roiRect.y + coneROI.roiRect.height - 1200/2)/f1;
 
-                    std::cout << "Refined Pos (x, y, z): (" << xEst << ", "
-                    << 0 << ", " <<  zEst << ")" << std::endl;
+                    std::cout << "Refined Pos (t, x, y, z): (" << lastFrame << ", " << xEst << ", "
+                    << yEst << ", " <<  zEst << ")" << std::endl;
 
                     // std::cout << "Median Disp: " << disparity[(int) disparity.size()/2] << std::endl; 
 
@@ -274,9 +271,9 @@ int main(int argc, char** argv) {
             }
         }
 
-        // cv::imshow("Camera_Undist2", rUnDist);
-        // cv::resizeWindow("Camera_Undist2", 1000, 600);
-        // cv::waitKey(1);
+        cv::imshow("Camera_Undist2", rUnDist);
+        cv::resizeWindow("Camera_Undist2", 1000, 600);
+        cv::waitKey(1);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
