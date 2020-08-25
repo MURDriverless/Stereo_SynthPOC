@@ -16,6 +16,7 @@
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
 #include "Detectors.hpp"
+#include "ClassicalStereo.hpp"
 
 struct FrameBuffer {
     std::mutex mutexLock;
@@ -64,6 +65,10 @@ int main(int argc, char** argv) {
     fs["calibImageSize"] >> calibSize;
 
     fs.release();
+
+    ClassicalStereo classical("../calibration.xml", "../calibration.xml");
+
+    return 0;
 
     cv::Mat newCameraMatrix = cv::getOptimalNewCameraMatrix(cameraMatrix, distCoeffs, calibSize, 0.0);
     cv::Mat map1, map2;

@@ -16,6 +16,7 @@ file(GLOB LOCAL_INC "includes/*.hpp")
 find_package( OpenCV 4.0.0 REQUIRED )
 
 add_subdirectory(Detectors)
+add_subdirectory(Classical)
 
 add_executable( main 
     src/main.cpp
@@ -30,6 +31,7 @@ include_directories(
 
 target_link_libraries( main 
     DetectorsLib
+    ClassicalLib
     ${OPENCV_LIBRARIES}
     ${OpenCV_LIBS}
     Threads::Threads
