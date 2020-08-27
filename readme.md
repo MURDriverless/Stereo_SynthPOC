@@ -25,3 +25,14 @@ sudo ldconfig
 ## Usage
  - Currently left and right video streams are hard coded, need to modify `src/main.cpp` to change the video stream targets
  - Place models in `models/` for `keypoints.onnx` and `yolo4_cones_int8.rt`
+
+## TODO:
+ - [x] Seperate classical algorithm code from `main` function
+ - [x] Untangle `CMakeList.txt`
+ - [x] Removed hard coded camera properties
+ - [ ] Thing about code structure for `ClassicalLib` and `DetectorLib`
+ - [ ] Fix up bounding box preview window
+ - [ ] Return cone color estimation in estimations
+ - [ ] Support for "Large Orange Cones" in addition to current Blue/Yellow
+ - [ ] Reintegrate with existing repo
+ - [ ] ROS Integration
