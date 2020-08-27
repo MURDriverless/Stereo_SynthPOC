@@ -43,6 +43,7 @@ class ClassicalStereo {
 
         ClassicalStereo::CameraParams lCamParams;
         ClassicalStereo::CameraParams rCamParams;
+        const double _baseline;
 
         std::vector<cv::Point3f> conePoints; // Real world mm
 
@@ -50,7 +51,7 @@ class ClassicalStereo {
         cv::Ptr<cv::DescriptorMatcher> descriptorMatcher;
 
     public:
-        ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile);
+        ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline);
         void preprocessFramePair(const cv::Mat& lFrame, const cv::Mat& rFrame, cv::Mat& lFrameOut, cv::Mat& rFrameOut);
         void estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, const std::vector<ConeROI>& coneROIs, std::vector<ConeEst> coneEsts, int lastFrame = -1, cv::Mat* rFramePreview = nullptr);
 };

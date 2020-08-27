@@ -66,7 +66,8 @@ int main(int argc, char** argv) {
 
     fs.release();
 
-    ClassicalStereo classical("../calibration.xml", "../calibration.xml");
+    const double baseline = 200.00;
+    ClassicalStereo classical("../calibration.xml", "../calibration.xml", baseline);
 
     // Prep detectors
     Detectors detectors;

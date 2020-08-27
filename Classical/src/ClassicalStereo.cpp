@@ -43,8 +43,8 @@ inline void ClassicalStereo::CameraParams::preprocessFrame(const cv::Mat& frame,
     frame_Undist_CUDA.download(frameOut);
 }
 
-ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile) : 
-    lCamParams(lCalibrationFile), rCamParams(rCalibrationFile) {
+ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline) : 
+    lCamParams(lCalibrationFile), rCamParams(rCalibrationFile), _baseline(baseline) {
 
     conePoints.push_back(cv::Point3f(0, 0, 0));
     for (int i = 1; i <= 3; i++) {
@@ -93,8 +93,6 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             const double &f1 = lCamParams.focal_px_x;
             const double &f2 = rCamParams.focal_px_x;
 
-            const double B = 200; // Dont hard code this;
-
             const double &lImgCenter_x = lCamParams.imgCenter_x;
             const double &rImgCenter_x = rCamParams.imgCenter_x;
 
@@ -108,7 +106,7 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             cv::Rect projRect(coneROI.roiRect);
 
             int x_p = coneROI.roiRect.x - lImgCenter_x;
-            int x_pp = (f2/est_depth) * (est_depth/f1 * x_p - B);
+            int x_pp = (f2/est_depth) * (est_depth/f1 * x_p - _baseline);
 
             projRect.x = x_pp + rImgCenter_x;
 
@@ -181,7 +179,7 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             std::sort(disparity.begin(), disparity.end());
 
             float medDisp = disparity[(int) disparity.size()/2];
-            float zEst = B*f2/medDisp;
+            float zEst = _baseline*f2/medDisp;
             float xEst = zEst*(coneROI.roiRect.x + coneROI.roiRect.width/2 - rImgCenter_x)/f1;
             float yEst = zEst*(coneROI.roiRect.y + coneROI.roiRect.height - rImgCenter_y)/f1;
 
