@@ -43,7 +43,7 @@ inline void ClassicalStereo::CameraParams::preprocessFrame(const cv::Mat& frame,
     frame_Undist_CUDA.download(frameOut);
 }
 
-ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline) : 
+ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline, cv::Ptr<cv::Feature2D>& featureDetector, cv::Ptr<cv::DescriptorMatcher>& descriptorMatcher) : 
     lCamParams(lCalibrationFile), rCamParams(rCalibrationFile), _baseline(baseline) {
 
     conePoints.push_back(cv::Point3f(0, 0, 0));
@@ -55,8 +55,8 @@ ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCali
         conePoints.push_back(cv::Point3f(-x, y, 0));
     }
 
-    featureDetector = cv::xfeatures2d::SIFT::create();
-    descriptorMatcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+    this->featureDetector   = featureDetector;
+    this->descriptorMatcher = descriptorMatcher;
 }
 
 void ClassicalStereo::preprocessFramePair(const cv::Mat& lFrame, const cv::Mat& rFrame, cv::Mat& lFrameOut, cv::Mat& rFrameOut) {

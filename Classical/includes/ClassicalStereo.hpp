@@ -51,7 +51,7 @@ class ClassicalStereo {
         cv::Ptr<cv::DescriptorMatcher> descriptorMatcher;
 
     public:
-        ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline);
+        ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline, cv::Ptr<cv::Feature2D>& featureDetector, cv::Ptr<cv::DescriptorMatcher>& descriptorMatcher);
         void preprocessFramePair(const cv::Mat& lFrame, const cv::Mat& rFrame, cv::Mat& lFrameOut, cv::Mat& rFrameOut);
         void estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, const std::vector<ConeROI>& coneROIs, std::vector<ConeEst> coneEsts, int lastFrame = -1, cv::Mat* rFramePreview = nullptr);
 };

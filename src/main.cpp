@@ -67,7 +67,9 @@ int main(int argc, char** argv) {
     fs.release();
 
     const double baseline = 200.00;
-    ClassicalStereo classical("../calibration.xml", "../calibration.xml", baseline);
+    cv::Ptr<cv::Feature2D> featureDetector = cv::xfeatures2d::SIFT::create();
+    cv::Ptr<cv::DescriptorMatcher> descriptorMatcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+    ClassicalStereo classical("../calibration.xml", "../calibration.xml", baseline, featureDetector, descriptorMatcher);
 
     // Prep detectors
     Detectors detectors;
