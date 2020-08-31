@@ -64,13 +64,13 @@ void ClassicalStereo::preprocessFramePair(const cv::Mat& lFrame, const cv::Mat& 
     rCamParams.preprocessFrame(rFrame, rFrameOut);
 }
 
-void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, const std::vector<ConeROI>& coneROIs, std::vector<ConeEst> coneEsts, int lastFrame, cv::Mat* rFramePreview) {
-    bool genPreview = (rFramePreview != nullptr);
-    if (genPreview) {
-        *rFramePreview = rFrame.clone();
+void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, const std::vector<ConeROI>& coneROIs, std::vector<ConeEst> coneEsts, int lastFrame, const PreviewArgs& previewArgs) {
+    if (previewArgs.valid) {
+        *(previewArgs.rFrameBBoxMatPtr) = rFrame.clone();
     }
 
-    for (const ConeROI &coneROI : coneROIs) {
+    for (int i = 0; i < coneROIs.size(); i++) {
+        const ConeROI& coneROI = coneROIs[i];
         cv::Mat tvec;
         cv::Mat rvec;
 
@@ -119,10 +119,6 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             // Should we implement reshaping if out of bounds?
             if (!(0 <= projRect.x && projRect.x + projRect.width < rFrame.cols)) {
                 continue;
-            }
-
-            if (genPreview) {
-                cv::rectangle(*rFramePreview, projRect, cv::Scalar(255, 255, 255));
             }
 
             cv::Mat unDist1_cropped = lFrame(coneROI.roiRect);
@@ -189,6 +185,14 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             coneEst.pos.z = zEst;
 
             coneEsts.push_back(coneEst);
+
+            if (previewArgs.valid) {
+                cv::rectangle(*(previewArgs.rFrameBBoxMatPtr), projRect, cv::Scalar(255, 255, 255));
+
+                if (i == 0) {
+                    // Draw matches here.
+                }
+            }
 
             if (lastFrame >= 0) {
                 std::cout << "Est Depth: " << est_depth << std::endl;

@@ -115,8 +115,12 @@ int main(int argc, char** argv) {
         detectors.detectFrame(lUnDist, coneROIs);
 
         std::vector<ConeEst> coneEsts;
+
         cv::Mat rFrameBBox;
-        classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, lastFrame, &rFrameBBox);
+        cv::Mat matchesPreview;
+        PreviewArgs previewArgs(rFrameBBox, matchesPreview);
+
+        classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, lastFrame, previewArgs);
 
         cv::imshow("Camera_Undist2", rFrameBBox);
         cv::resizeWindow("Camera_Undist2", 1000, 600);
