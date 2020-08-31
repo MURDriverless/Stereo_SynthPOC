@@ -29,8 +29,7 @@ include_directories(
 )
 
 target_link_libraries( main 
-    DetectorsLib
-    ClassicalLib
+    StereoPipelineLib
     ${OPENCV_LIBRARIES}
     ${OpenCV_LIBS}
     Threads::Threads
