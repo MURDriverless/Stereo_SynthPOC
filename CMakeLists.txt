@@ -15,6 +15,7 @@ file(GLOB LOCAL_INC "includes/*.hpp")
 
 find_package( OpenCV 4.0.0 REQUIRED )
 
+add_subdirectory(StereoCommon)
 add_subdirectory(Detectors)
 add_subdirectory(Classical)
 

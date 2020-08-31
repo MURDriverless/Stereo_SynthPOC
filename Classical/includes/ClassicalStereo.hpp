@@ -3,26 +3,14 @@
 
 #include <opencv2/core.hpp>
 #include <opencv2/core/cuda.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
 
-#include "Detectors.hpp"
+#include "ConeROI.hpp"
+#include "ConeEst.hpp"
+#include "PreviewArgs.hpp"
 
 #define CONE4 // Use 4 Point cone pnp rather than 7
-
-struct ConeEst {
-    cv::Point3f pos;
-};
-
-struct PreviewArgs {
-    const bool valid;
-    cv::Mat* rFrameBBoxMatPtr;
-    cv::Mat* matchesMatPtr;
-
-    PreviewArgs() : valid(false) {};
-    PreviewArgs(cv::Mat& rFrameBBox, cv::Mat& matchesMat) : valid(true) {
-        rFrameBBoxMatPtr = &rFrameBBox;
-        matchesMatPtr = &matchesMat;
-    };
-};
 
 class ClassicalStereo {
     private:

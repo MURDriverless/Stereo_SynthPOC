@@ -1,5 +1,3 @@
-find_package(OpenCV REQUIRED)
-
 find_package(tkDNN)
 
 file(GLOB LOCAL_SRC "src/*.cpp")
@@ -12,10 +10,11 @@ target_link_libraries(DetectorsLib
     ${tkDNN_LIBRARIES}
     ${OPENCV_LIBRARIES}
     nvonnxparser
+    StereoCommon
 )
 
 target_include_directories(DetectorsLib
     PUBLIC ${tkDNN_INCLUDE_DIRS}
     PUBLIC ${OpenCV_INCLUDE_DIRS}
-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/includes"
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes
 )

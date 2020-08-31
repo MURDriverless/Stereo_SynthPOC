@@ -5,11 +5,7 @@
 #include "tkDNN/Yolo3Detection.h"
 #include "KeypointDetector.hpp"
 
-struct ConeROI {
-    cv::Rect roiRect;
-    float x, y, w, h;
-    std::vector<cv::Point2f> keypoints;
-};
+#include "ConeROI.hpp"
 
 class Detectors {
     private:
