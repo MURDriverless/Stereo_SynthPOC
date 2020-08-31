@@ -18,6 +18,8 @@
 #include "Detectors.hpp"
 #include "ClassicalStereo.hpp"
 
+#define PREVIEW
+
 struct FrameBuffer {
     std::mutex mutexLock;
     cv::Mat lFrame;
@@ -39,8 +41,6 @@ int main(int argc, char** argv) {
     // Prep Window
     cv::namedWindow("Camera_Undist1", 0);
     cv::namedWindow("Camera_Undist2", 0);
-    cv::namedWindow("Cam1_crop", 0);
-    cv::namedWindow("Cam2_crop", 0);
     cv::namedWindow("Matches", 0);
 
     // Prep Producer
@@ -82,6 +82,15 @@ int main(int argc, char** argv) {
 
     auto then = std::chrono::high_resolution_clock::now();
 
+    #ifdef PREVIEW
+    cv::Mat rFrameBBox;
+    cv::Mat lFrameBBox;
+    cv::Mat matchesPreview;
+    PreviewArgs previewArgs(lFrameBBox, rFrameBBox, matchesPreview);
+    #else
+    PreviewArgs previewArgs();
+    #endif /* PREVIEW */
+
     while (true) {
 
         auto now = std::chrono::high_resolution_clock::now();
@@ -112,15 +121,16 @@ int main(int argc, char** argv) {
         classical.preprocessFramePair(lFrameCopy, rFrameCopy, lUnDist, rUnDist);
 
         std::vector<ConeROI> coneROIs;
-        detectors.detectFrame(lUnDist, coneROIs);
+        detectors.detectFrame(lUnDist, coneROIs, previewArgs);
 
         std::vector<ConeEst> coneEsts;
 
-        cv::Mat rFrameBBox;
-        cv::Mat matchesPreview;
-        PreviewArgs previewArgs(rFrameBBox, matchesPreview);
-
         classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, lastFrame, previewArgs);
+
+        #ifdef PREVIEW
+        cv::imshow("Camera_Undist1", lFrameBBox);
+        cv::resizeWindow("Camera_Undist1", 1000, 600);
+        cv::waitKey(1);
 
         cv::imshow("Camera_Undist2", rFrameBBox);
         cv::resizeWindow("Camera_Undist2", 1000, 600);
@@ -129,6 +139,7 @@ int main(int argc, char** argv) {
         cv::imshow("Matches", matchesPreview);
         cv::resizeWindow("Camera_Undist2", 1000, 600);
         cv::waitKey(1);
+        #endif /* PREVIEW */
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }

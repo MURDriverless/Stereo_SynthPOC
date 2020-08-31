@@ -6,6 +6,7 @@
 #include "KeypointDetector.hpp"
 
 #include "ConeROI.hpp"
+#include "PreviewArgs.hpp"
 
 class Detectors {
     private:
@@ -25,5 +26,5 @@ class Detectors {
         Detectors();
         ~Detectors();
         void initialize(std::string objectModel, std::string featureModel);
-        void detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &coneROIs);
+        void detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &coneROIs, const PreviewArgs& previewArgs = PreviewArgs());
 };

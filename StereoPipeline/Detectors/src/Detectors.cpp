@@ -30,12 +30,15 @@ void Detectors::initialize(std::string objectModel, std::string featureModel) {
     detNN->init(objectModel, n_classes, n_batch);
 }
 
-void Detectors::detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &coneROIs) {
+void Detectors::detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &coneROIs, const PreviewArgs& previewArgs) {
     std::vector<cv::Mat> batch_frame;
     std::vector<cv::Mat> batch_dnn_input;
 
     // batch frame will be used for image output
-    batch_frame.push_back(imageFrame);
+    if (previewArgs.valid) {
+        *(previewArgs.lFrameBBoxMatPtr) = imageFrame.clone();
+        batch_frame.push_back(*(previewArgs.lFrameBBoxMatPtr));
+    }
 
     // dnn input will be resized to network format
     batch_dnn_input.push_back(imageFrame.clone());
@@ -73,23 +76,22 @@ void Detectors::detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &con
     // keypoint network inference
     std::vector<std::vector<cv::Point2f>> keypoints = keypointDetector->doInference(rois);
 
-    detNN->draw(batch_frame);
+    if (previewArgs.valid) {
+        detNN->draw(batch_frame);
+    }
     for (int i = 0; i < bboxs.size(); i++) {
         for (int j = 0; j < keypoints[i].size(); j++) {
             cv::Point2f &keypoint = keypoints[i][j];
             keypoint.y += bboxs[i].y;
             keypoint.x += bboxs[i].x;
 
-            cv::circle(batch_frame[0], keypoint, 3, cv::Scalar(0, 255, 0), -1, 8);
+            if (previewArgs.valid) {
+                cv::circle(batch_frame[0], keypoint, 3, cv::Scalar(0, 255, 0), -1, 8);
+            }
 
             coneROIs[i].keypoints.push_back(keypoint);
         }
     }
-
-    cv::imshow("Camera_Undist1", batch_frame[0]);
-    cv::resizeWindow("Camera_Undist1", 1000, 600);
-
-    cv::waitKey(1);
 
     std::cout << " " << std::setw(5) << detNN->batchDetected[0].size() << " objects detected.";
     std::cout << std::endl;
