@@ -30,8 +30,9 @@ sudo ldconfig
  - [x] Seperate classical algorithm code from `main` function
  - [x] Untangle `CMakeList.txt`
  - [x] Removed hard coded camera properties
- - [ ] Thing about code structure for `ClassicalLib` and `DetectorLib`
- - [ ] Fix up bounding box preview window
+ - [x] Thing about code structure for `ClassicalLib` and `DetectorLib`
+    - `ClassicalLib` and `DetectorsLib` moved to `StereoPipelineLib`, with `StereoCommon` for common structs.
+ - [x] Fix up bounding box preview window
  - [ ] Return cone color estimation in estimations
  - [ ] Support for "Large Orange Cones" in addition to current Blue/Yellow
  - [ ] Reintegrate with existing repo
