@@ -90,6 +90,7 @@ void Detectors::detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &con
             }
 
             coneROIs[i].keypoints.push_back(keypoint);
+            coneROIs[i].colorID = static_cast<ConeColorID>(bboxs[i].cl);
         }
     }
 

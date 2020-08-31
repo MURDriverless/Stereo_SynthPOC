@@ -46,6 +46,7 @@ inline void ClassicalStereo::CameraParams::preprocessFrame(const cv::Mat& frame,
 ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline, cv::Ptr<cv::Feature2D>& featureDetector, cv::Ptr<cv::DescriptorMatcher>& descriptorMatcher) : 
     lCamParams(lCalibrationFile), rCamParams(rCalibrationFile), _baseline(baseline) {
 
+    std::vector<cv::Point3f> conePoints;
     conePoints.push_back(cv::Point3f(0, 0, 0));
     for (int i = 1; i <= 3; i++) {
         float x = -77.5/3.0f * i;
@@ -54,6 +55,8 @@ ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCali
         conePoints.push_back(cv::Point3f( x, y, 0));
         conePoints.push_back(cv::Point3f(-x, y, 0));
     }
+    conePointsVec.push_back(conePoints);
+    conePoints.clear();
 
     this->featureDetector   = featureDetector;
     this->descriptorMatcher = descriptorMatcher;
@@ -75,6 +78,24 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
         cv::Mat rvec;
 
         double est_depth;
+
+        // Logic for switching pts, currently a STUB
+        int conePtsID = -1;
+        switch (coneROI.colorID) {
+            case ConeColorID::Blue :
+                conePtsID = 0;
+                break;
+            case ConeColorID::Yellow :
+                conePtsID = 0;
+                break;
+            case ConeColorID::Orange :
+                conePtsID = 0;
+                break;
+            default :
+                conePtsID = 0;
+        };
+
+        auto& conePoints = conePointsVec[conePtsID];
 
         #ifdef CONE4
             std::vector<cv::Point3f> conePts (conePoints.begin()+1, conePoints.end()-2);
@@ -183,6 +204,7 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             coneEst.pos.x = xEst;
             coneEst.pos.y = yEst;
             coneEst.pos.z = zEst;
+            coneEst.colorID = coneROI.colorID;
 
             coneEsts.push_back(coneEst);
 
@@ -196,8 +218,8 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
 
             if (lastFrame >= 0) {
                 std::cout << "Est Depth: " << est_depth << std::endl;
-                std::cout << "Refined Pos (t, x, y, z): (" << lastFrame << ", " << xEst << ", "
-                << yEst << ", " <<  zEst << ")" << std::endl;
+                std::cout << "Refined Pos (t, x, y, z, colorID): (" << lastFrame << ", " << xEst << ", "
+                << yEst << ", " <<  zEst << ", " << static_cast<int>(coneEst.colorID) << ")" << std::endl;
             }
         }
     }

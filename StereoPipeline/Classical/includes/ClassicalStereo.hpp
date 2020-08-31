@@ -39,7 +39,7 @@ class ClassicalStereo {
         ClassicalStereo::CameraParams rCamParams;
         const double _baseline;
 
-        std::vector<cv::Point3f> conePoints; // Real world mm
+        std::vector<std::vector<cv::Point3f>> conePointsVec; // Real world mm
 
         cv::Ptr<cv::Feature2D> featureDetector;
         cv::Ptr<cv::DescriptorMatcher> descriptorMatcher;
