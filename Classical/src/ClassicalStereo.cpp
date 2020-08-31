@@ -190,7 +190,7 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
                 cv::rectangle(*(previewArgs.rFrameBBoxMatPtr), projRect, cv::Scalar(255, 255, 255));
 
                 if (i == 0) {
-                    // Draw matches here.
+                    cv::drawMatches(unDist1_cropped, featureKeypoints1, unDist2_cropped, featureKeypoints2, matchesFilt, *(previewArgs.matchesMatPtr));
                 }
             }
 
