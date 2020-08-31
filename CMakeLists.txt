@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.18)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -15,9 +15,7 @@ file(GLOB LOCAL_INC "includes/*.hpp")
 
 find_package( OpenCV 4.0.0 REQUIRED )
 
-add_subdirectory(StereoCommon)
-add_subdirectory(Detectors)
-add_subdirectory(Classical)
+add_subdirectory(StereoPipeline)
 
 add_executable( main 
     src/main.cpp
