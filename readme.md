@@ -1,6 +1,8 @@
 # Stereo_SynthPOC
 Currently used as a playground for testing and benchmarking of the stereo pipeline, as well as clean up of code.
 
+**HAVE TO USE `catkin_make` for some reason**
+
 **Will be removed in the future once integrated with original repo**
 
 ## Requirements/Compiled with
@@ -38,3 +40,4 @@ sudo ldconfig
    - "Supported", but geometry is not programmed.
  - [ ] Reintegrate with existing repo
  - [ ] ROS Integration
+ - [ ] Find out why `catkin build` does not work?
