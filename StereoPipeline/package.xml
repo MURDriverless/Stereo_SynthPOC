@@ -2,7 +2,7 @@
 <package format="2">
   <name>StereoPipelineLib</name>
   <version>0.0.0</version>
-  <description>The mur_stereo_ros package</description>
+  <description>The StereoPipelineLib package</description>
 
   <maintainer email="andrew@todo.todo">andrew</maintainer>
 
