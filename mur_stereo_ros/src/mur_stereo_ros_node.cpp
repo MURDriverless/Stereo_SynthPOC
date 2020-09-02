@@ -39,5 +39,7 @@ int main(int argc, char** argv) {
     Detectors detectors;
     detectors.initialize(coneRT, keyPtsONNX);
 
+    // use 2 threads with thread args? Assume always synced
+
     return 0;
 }
