@@ -5,7 +5,7 @@ if (NOT OpenCV_FOUND)
     find_package( OpenCV 4.0.0 REQUIRED )
 endif()
 
-project("StereoPipelineLib")
+project("mur_stereo_pipeline")
 
 if (DEFINED CATKIN_DEVEL_PREFIX)
   find_package(catkin REQUIRED)
