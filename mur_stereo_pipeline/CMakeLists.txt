@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.18)
+project("mur_stereo_pipeline")
 
 if (NOT OpenCV_FOUND)
     message(WARNING "OpenCV not included in parent CMake project")
     find_package( OpenCV 4.0.0 REQUIRED )
 endif()
-
-project("mur_stereo_pipeline")
 
 if (DEFINED CATKIN_DEVEL_PREFIX)
   find_package(catkin REQUIRED)

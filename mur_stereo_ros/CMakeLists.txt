@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(mur_stereo_ros)
+project("mur_stereo_ros")
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   roscpp
   std_msgs
+  mur_stereo_pipeline
 )
 
 ## System dependencies are found with CMake's conventions
@@ -112,14 +113,14 @@ add_definitions(-DSRC_ROOT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES synth_producer
-  CATKIN_DEPENDS cv_bridge image_transport roscpp std_msgs
+  CATKIN_DEPENDS cv_bridge image_transport roscpp std_msgs mur_stereo_pipeline
 #  DEPENDS system_lib
 )
 
 ###########
 ## Build ##
 ###########
-
+message(WARNING ${catkin_INCLUDE_DIRS})
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
@@ -141,7 +142,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/mur_stereo_ros_node.cpp)
+add_executable(${PROJECT_NAME}_node
+    src/mur_stereo_ros_node.cpp
+)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -158,7 +161,6 @@ target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
   Threads::Threads
-  StereoPipelineLib
 )
 
 #############

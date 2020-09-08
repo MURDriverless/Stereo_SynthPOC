@@ -62,6 +62,9 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
 
+  <build_depend>mur_stereo_pipeline</build_depend>
+  <build_export_depend>mur_stereo_pipeline</build_export_depend>
+  <exec_depend>mur_stereo_pipeline</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
