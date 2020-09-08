@@ -7,7 +7,8 @@ Currently used as a playground for testing and benchmarking of the stereo pipeli
 
 ## Requirements/Compiled with
  - `CUDA` 10.0
- - `CUDNN` 7.6
+ - `CUDNN` 7.6.3
+ - `TensorRT` 7.0.0
  - `OpenCV` 4.1.1, Compiled with CUDA, CUDNN and Non-free addons
  - `tkDNN` 0.5
 
