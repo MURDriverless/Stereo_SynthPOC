@@ -28,6 +28,7 @@ sudo ldconfig
 ## Usage
  - Currently left and right video streams are hard coded, need to modify `src/main.cpp` to change the video stream targets
  - Place models in `models/` for `keypoints.onnx` and `yolo4_cones_int8.rt`
+ - `mur_stereo_ros_node` listens to `/mur/stereo_cam/left_image` and `/mur/stereo_cam/right_image`
 
 ## TODO:
  - [x] Seperate classical algorithm code from `main` function
