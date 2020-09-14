@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   mur_stereo_pipeline
+  mur_common
 )
 
 ## System dependencies are found with CMake's conventions
@@ -114,7 +115,7 @@ add_definitions(-DSRC_ROOT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES synth_producer
-  CATKIN_DEPENDS cv_bridge image_transport roscpp std_msgs mur_stereo_pipeline
+  CATKIN_DEPENDS cv_bridge image_transport roscpp std_msgs mur_stereo_pipeline mur_common
 #  DEPENDS system_lib
 )
 

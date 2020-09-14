@@ -66,6 +66,8 @@
   <build_export_depend>mur_stereo_pipeline</build_export_depend>
   <exec_depend>mur_stereo_pipeline</exec_depend>
 
+  <depend>mur_common</depend>
+
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->

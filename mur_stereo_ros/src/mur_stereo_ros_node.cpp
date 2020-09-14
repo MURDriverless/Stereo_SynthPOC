@@ -21,11 +21,13 @@
 #include "ClassicalStereo.hpp"
 #include "PreviewArgs.hpp"
 
+#include "mur_common/cone_msg.h"
+
 #ifndef SRC_ROOT_PATH
 #define SRC_ROOT_PATH "../"
 #endif
 
-#define PREVIEW
+// #define PREVIEW
 
 struct GlobalFrames {
     cv::Mat lFrame;
@@ -82,7 +84,7 @@ int main(int argc, char** argv) {
     cv::Mat matchesPreview;
     PreviewArgs previewArgs(lFrameBBox, rFrameBBox, matchesPreview);
     #else
-    PreviewArgs previewArgs();
+    PreviewArgs previewArgs = PreviewArgs();
     #endif /* PREVIEW */
 
     // use 2 threads with thread args? Assume always synced
@@ -92,6 +94,8 @@ int main(int argc, char** argv) {
     image_transport::ImageTransport it(nh);
     image_transport::Subscriber subL = it.subscribe("mur/stereo_cam/left_image", 1, imageCallbackL);
     image_transport::Subscriber subR = it.subscribe("mur/stereo_cam/right_image", 1, imageCallbackR);
+
+    ros::Publisher coneEstPub = nh.advertise<mur_common::cone_msg>("/mur/cones/stereo", 1);
 
     auto then = std::chrono::high_resolution_clock::now();
     while (ros::ok()) {
@@ -110,8 +114,16 @@ int main(int argc, char** argv) {
             detectors.detectFrame(lUnDist, coneROIs, previewArgs);
 
             std::vector<ConeEst> coneEsts;
+            mur_common::cone_msg coneMsg;
 
-            classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, 0, previewArgs);
+            classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, -1, previewArgs);
+
+            for (const ConeEst &coneEst : coneEsts) {
+                coneMsg.x.push_back(coneEst.pos.x/1000.0);
+                coneMsg.y.push_back(coneEst.pos.z/1000.0);
+                coneMsg.colour.push_back(ConeColorID2str(coneEst.colorID));
+            }
+            coneEstPub.publish(coneMsg);
 
             #ifdef PREVIEW
             cv::imshow("Camera_Undist1", lFrameBBox);
