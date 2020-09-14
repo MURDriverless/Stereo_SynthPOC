@@ -1,8 +1,6 @@
 # Stereo_SynthPOC
 Currently used as a playground for testing and benchmarking of the stereo pipeline, as well as clean up of code.
 
-**HAVE TO USE `catkin_make` for some reason**
-
 **Will be removed in the future once integrated with original repo**
 
 ## Requirements/Compiled with
@@ -12,6 +10,7 @@ Currently used as a playground for testing and benchmarking of the stereo pipeli
  - `OpenCV` 4.1.1, Compiled with CUDA, CUDNN and Non-free addons
  - `tkDNN` 0.5
  - `vision_opencv` from [https://github.com/MURDriverless/vision_opencv](https://github.com/MURDriverless/vision_opencv)
+ - `mur_common` from [https://github.com/MURDriverless/mur_common](https://github.com/MURDriverless/mur_common)
 
 ### Installing `tkDNN`
 ```

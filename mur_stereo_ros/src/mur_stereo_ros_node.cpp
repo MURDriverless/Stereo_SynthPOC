@@ -118,6 +118,14 @@ int main(int argc, char** argv) {
 
             classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, -1, previewArgs);
 
+            /*
+            z (forward)
+            ^
+            |
+            +-> x (x = 0, center between cameras)
+
+            Calibrated in mm, need to convert to m
+            */
             for (const ConeEst &coneEst : coneEsts) {
                 coneMsg.x.push_back(coneEst.pos.x/1000.0);
                 coneMsg.y.push_back(coneEst.pos.z/1000.0);
