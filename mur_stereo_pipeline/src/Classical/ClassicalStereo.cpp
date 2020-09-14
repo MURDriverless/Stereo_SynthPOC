@@ -55,7 +55,18 @@ ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCali
         conePoints.push_back(cv::Point3f( x, y, 0));
         conePoints.push_back(cv::Point3f(-x, y, 0));
     }
+    std::vector<cv::Point3f> conePointsBig;
+    conePointsBig.push_back(cv::Point3f(0, 0, 0));
+    for (int i = 1; i <= 3; i++) {
+        float x = -77.5/3.0f * i;
+        float y = 505.0f/3.0f * i;
+
+        conePointsBig.push_back(cv::Point3f( x, y, 0));
+        conePointsBig.push_back(cv::Point3f(-x, y, 0));
+    }
+
     conePointsVec.push_back(conePoints);
+    conePointsVec.push_back(conePointsBig);
     conePoints.clear();
 
     this->featureDetector   = featureDetector;
@@ -89,10 +100,8 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
                 conePtsID = 0;
                 break;
             case ConeColorID::Orange :
-                conePtsID = 0;
+                conePtsID = 1;
                 break;
-            default :
-                conePtsID = 0;
         };
 
         auto& conePoints = conePointsVec[conePtsID];
