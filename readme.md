@@ -43,4 +43,4 @@ sudo ldconfig
  - [ ] Support for "Large Orange Cones" in addition to current Blue/Yellow
    - "Supported", but geometry is not programmed.
  - [ ] Reintegrate with existing repo
- - [ ] Find out why `catkin build` does not work?
+ - [x] Find out why `catkin build` does not work?
