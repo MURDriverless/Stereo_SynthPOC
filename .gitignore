@@ -3,3 +3,5 @@ build/**
 models/**
 *.mp4
 *.xml
+
+!package.xml
