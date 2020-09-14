@@ -11,19 +11,33 @@ if (DEFINED CATKIN_DEVEL_PREFIX)
   message(STATUS "Catkin env set, compiling ${PROJECT_NAME} with ROS")
 
   catkin_package(
+    INCLUDE_DIRS includes/Classical includes/Detectors includes/StereoCommon
     LIBRARIES ${PROJECT_NAME}
   )
 else()
   message(STATUS "Catkin env not set, compiling ${PROJECT_NAME} without ROS")
 endif()
 
-add_subdirectory(StereoCommon)
-add_subdirectory(Classical)
-add_subdirectory(Detectors)
+find_package(tkDNN)
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}
+    src/Classical/ClassicalStereo.cpp
+    src/Detectors/EntropyCalibrator.cpp
+    src/Detectors/Utils.cpp
+    src/Detectors/Detectors.cpp
+    src/Detectors/KeypointDetector.cpp
+  )
 
 target_link_libraries(${PROJECT_NAME} 
-    INTERFACE ClassicalLib
-    INTERFACE DetectorsLib
+    ${tkDNN_LIBRARIES}
+    ${OPENCV_LIBRARIES}
+    nvonnxparser
+)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC ${tkDNN_INCLUDE_DIRS}
+    PUBLIC ${OpenCV_INCLUDE_DIRS}
+    PUBLIC includes/Classical
+    PUBLIC includes/Detectors
+    PUBLIC includes/StereoCommon
 )

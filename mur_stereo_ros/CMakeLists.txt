@@ -27,6 +27,7 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 ## Own CMake Deps
 ################################################
+find_package(CUDA)
 find_package( OpenCV 4.0.0 REQUIRED )
 add_definitions(-DSRC_ROOT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
 
@@ -127,6 +128,7 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${CUDA_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
