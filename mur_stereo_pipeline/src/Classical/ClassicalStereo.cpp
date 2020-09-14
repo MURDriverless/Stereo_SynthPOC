@@ -67,7 +67,7 @@ void ClassicalStereo::preprocessFramePair(const cv::Mat& lFrame, const cv::Mat& 
     rCamParams.preprocessFrame(rFrame, rFrameOut);
 }
 
-void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, const std::vector<ConeROI>& coneROIs, std::vector<ConeEst> coneEsts, int lastFrame, const PreviewArgs& previewArgs) {
+void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, const std::vector<ConeROI>& coneROIs, std::vector<ConeEst>& coneEsts, int lastFrame, const PreviewArgs& previewArgs) {
     if (previewArgs.valid) {
         *(previewArgs.rFrameBBoxMatPtr) = rFrame.clone();
     }
