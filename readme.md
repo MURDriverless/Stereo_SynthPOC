@@ -39,7 +39,8 @@ sudo ldconfig
  - [x] Fix up bounding box preview window
  - [x] Return cone color estimation in estimations
  - [x] ROS Integration
- - [ ] Support for "Large Orange Cones" in addition to current Blue/Yellow
+ - [x] Support for "Large Orange Cones" in addition to current Blue/Yellow
    - "Supported", but geometry is not programmed.
+   - Think of a more elegant way to do it? Kinda "Hacky" right now.
  - [ ] Reintegrate with existing repo
  - [x] Find out why `catkin build` does not work?
