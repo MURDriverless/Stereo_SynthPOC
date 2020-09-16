@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 
+project(mur_stereo)
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -28,3 +30,16 @@ target_link_libraries( mur_stereo_video
 )
 
 # mur_stereo_images
+add_executable( mur_stereo_image
+mur_stereo_image/src/main.cpp
+)
+
+target_include_directories( mur_stereo_image
+    PUBLIC ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries( mur_stereo_image 
+    mur_stereo_pipeline
+    ${OPENCV_LIBRARIES}
+    ${OpenCV_LIBS}
+)
