@@ -213,6 +213,14 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             float xEst = -zEst*(coneROI.roiRect.x + coneROI.roiRect.width/2 - rImgCenter_x)/f1;
             float yEst = -zEst*(coneROI.roiRect.y + coneROI.roiRect.height - rImgCenter_y)/f1;
 
+            if (abs(est_depth - zEst) > 1500) {
+                continue;
+            }
+
+            if (zEst < 0) {
+                continue;
+            }
+
             ConeEst coneEst;
             coneEst.pos.x = xEst;
             coneEst.pos.y = yEst;
