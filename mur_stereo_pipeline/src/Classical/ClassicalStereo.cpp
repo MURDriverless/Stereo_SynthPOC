@@ -151,6 +151,10 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
                 continue;
             }
 
+            if (!(0 <= projRect.y && projRect.y + projRect.height < rFrame.rows)) {
+                continue;
+            }
+
             cv::Mat unDist1_cropped = lFrame(coneROI.roiRect);
             cv::Mat unDist2_cropped = rFrame(projRect);
 
