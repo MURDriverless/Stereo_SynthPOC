@@ -9,8 +9,8 @@ enum class ConeColorID {
 
 inline std::string ConeColorID2str(ConeColorID coneColorID) {
     switch (coneColorID) {
-        case (ConeColorID::Blue)    : return "Blue";
-        case (ConeColorID::Orange)  : return "Orange";
-        case (ConeColorID::Yellow)  : return "Yellow";
+        case (ConeColorID::Blue)    : return "BLUE";
+        case (ConeColorID::Orange)  : return "ORANGE";
+        case (ConeColorID::Yellow)  : return "YELLOW";
     }
 }
