@@ -18,7 +18,7 @@
 #include "Detectors.hpp"
 #include "ClassicalStereo.hpp"
 
-// #define PREVIEW
+#define PREVIEW
 
 struct FrameBuffer {
     std::mutex mutexLock;

@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     Detectors detectors;
     detectors.initialize(coneRT, keyPtsONNX);
 
-    const char imFolder[] = "../Output1/Blue";
+    const char imFolder[] = "../Output1/Yellow";
     char pathBuf[256];
     int frameNum = 1;
 
