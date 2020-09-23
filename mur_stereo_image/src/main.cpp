@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 
         cv::imshow("Camera_Undist2", rFrameBBox);
         cv::resizeWindow("Camera_Undist2", 1000, 600);
-        cv::waitKey(500);
+        cv::waitKey(1);
 
         // cv::imshow("Matches", matchesPreview);
         // cv::resizeWindow("Camera_Undist2", 1000, 600);
