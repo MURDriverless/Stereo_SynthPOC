@@ -110,8 +110,8 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             std::vector<cv::Point3f> conePts (conePoints.begin()+1, conePoints.end()-2);
             std::vector<cv::Point2f> keyPts  (coneROI.keypoints.begin()+1, coneROI.keypoints.end()-2);
         #else
-            std::vector<cv::Point3f> &conePts = conePoints;
-            std::vector<cv::Point2f> &keyPts  = coneROI.keypoints;
+            const std::vector<cv::Point3f> &conePts = conePoints;
+            const std::vector<cv::Point2f> &keyPts  = coneROI.keypoints;
         #endif
 
         // TODO: Need to process the return

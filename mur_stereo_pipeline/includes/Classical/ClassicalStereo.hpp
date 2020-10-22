@@ -10,7 +10,7 @@
 #include "ConeEst.hpp"
 #include "PreviewArgs.hpp"
 
-#define CONE4 // Use 4 Point cone pnp rather than 7
+// #define CONE4 // Use 4 Point cone pnp rather than 7
 
 class ClassicalStereo {
     private:
