@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME}
     src/Detectors/Utils.cpp
     src/Detectors/Detectors.cpp
     src/Detectors/KeypointDetector.cpp
+    src/StereoCommon/StereoBench.cpp
   )
 
 target_link_libraries(${PROJECT_NAME} 

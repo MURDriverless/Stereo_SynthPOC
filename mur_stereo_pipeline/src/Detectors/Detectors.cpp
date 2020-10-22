@@ -1,5 +1,7 @@
 #include "Detectors.hpp"
 
+#include "StereoBench.hpp"
+
 Detectors::Detectors() {
 
 }
@@ -47,6 +49,8 @@ void Detectors::detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &con
     detNN->update(batch_dnn_input, n_batch);
 
     std::vector<tk::dnn::box> bboxs = detNN->batchDetected[0];
+    
+    StereoBenchAddTime(SB_TIME_IDX::FRAME_DETECT);
 
     // generate a vector of image crops for keypoint detector
     std::vector<cv::Mat> rois;
@@ -75,6 +79,8 @@ void Detectors::detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &con
 
     // keypoint network inference
     std::vector<std::vector<cv::Point2f>> keypoints = keypointDetector->doInference(rois);
+
+    StereoBenchAddTime(SB_TIME_IDX::FRAME_KEYPT);
 
     if (previewArgs.valid) {
         detNN->draw(batch_frame);

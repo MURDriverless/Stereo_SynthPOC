@@ -18,7 +18,9 @@
 #include "Detectors.hpp"
 #include "ClassicalStereo.hpp"
 
-#define PREVIEW
+#include "StereoBench.hpp"
+
+// #define PREVIEW
 
 struct FrameBuffer {
     std::mutex mutexLock;
@@ -77,6 +79,8 @@ int main(int argc, char** argv) {
     PreviewArgs previewArgs = PreviewArgs();
     #endif /* PREVIEW */
 
+    StereoBenchPrintInfo();
+
     while (true) {
 
         auto now = std::chrono::high_resolution_clock::now();
@@ -103,8 +107,12 @@ int main(int argc, char** argv) {
             continue;
         }
 
+        StereoBenchAddTime(SB_TIME_IDX::FRAME_INGEST);
+
         cv::Mat lUnDist, rUnDist;
         classical.preprocessFramePair(lFrameCopy, rFrameCopy, lUnDist, rUnDist);
+
+        StereoBenchAddTime(SB_TIME_IDX::FRAME_UNDIST);
 
         std::vector<ConeROI> coneROIs;
         detectors.detectFrame(lUnDist, coneROIs, previewArgs);
@@ -112,6 +120,9 @@ int main(int argc, char** argv) {
         std::vector<ConeEst> coneEsts;
 
         classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, lastFrame, previewArgs);
+
+        StereoBenchPrintTimes();
+
 
         #ifdef PREVIEW
         cv::imshow("Camera_Undist1", lFrameBBox);
@@ -126,6 +137,7 @@ int main(int argc, char** argv) {
         cv::resizeWindow("Camera_Undist2", 1000, 600);
         cv::waitKey(1);
         #endif /* PREVIEW */
+
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }

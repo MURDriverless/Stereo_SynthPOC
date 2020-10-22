@@ -1,5 +1,7 @@
 #include "ClassicalStereo.hpp"
 
+#include "StereoBench.hpp"
+
 #include <opencv2/core.hpp>
 #include <opencv2/calib3d.hpp>
 
@@ -244,4 +246,6 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             }
         }
     }
+
+    StereoBenchAddTime(SB_TIME_IDX::FRAME_SIFT);
 }
