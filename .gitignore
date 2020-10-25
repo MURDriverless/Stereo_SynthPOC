@@ -6,3 +6,4 @@ models/**
 *.png
 
 !package.xml
+calibration.xml.bak

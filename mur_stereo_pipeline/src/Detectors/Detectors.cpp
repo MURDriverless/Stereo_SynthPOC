@@ -12,7 +12,6 @@ Detectors::~Detectors() {
 }
 
 void Detectors::initialize(std::string objectModel, std::string featureModel) {
-
     detNN.reset(new tk::dnn::Yolo3Detection());
     detNN->init(objectModel, n_classes, n_batch);
 
@@ -27,9 +26,6 @@ void Detectors::initialize(std::string objectModel, std::string featureModel) {
         keypointsH, 
         maxBatch)
     );
-
-    detNN.reset(new tk::dnn::Yolo3Detection());
-    detNN->init(objectModel, n_classes, n_batch);
 }
 
 void Detectors::detectFrame(const cv::Mat &imageFrame, std::vector<ConeROI> &coneROIs, const PreviewArgs& previewArgs) {

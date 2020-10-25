@@ -31,7 +31,7 @@ target_link_libraries( mur_stereo_video
 
 # mur_stereo_images
 add_executable( mur_stereo_image
-mur_stereo_image/src/main.cpp
+    mur_stereo_image/src/main.cpp
 )
 
 target_include_directories( mur_stereo_image
@@ -43,3 +43,6 @@ target_link_libraries( mur_stereo_image
     ${OPENCV_LIBRARIES}
     ${OpenCV_LIBS}
 )
+
+# mur_stereo_basler
+add_subdirectory(mur_stereo_basler)
