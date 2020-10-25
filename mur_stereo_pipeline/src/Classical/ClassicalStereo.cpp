@@ -13,6 +13,8 @@
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
+// #define USE_CUDA_PRE
+
 ClassicalStereo::CameraParams::CameraParams(const std::string& calibrationFile) {
     cv::FileStorage fs;
     fs.open(calibrationFile, cv::FileStorage::READ);
@@ -35,14 +37,19 @@ ClassicalStereo::CameraParams::CameraParams(const std::string& calibrationFile) 
 }
 
 inline void ClassicalStereo::CameraParams::preprocessFrame(const cv::Mat& frame, cv::Mat& frameOut) {
+#ifdef USE_CUDA_PRE
     cv::cuda::GpuMat frame_CUDA(frame);
     cv::cuda::GpuMat frame_RGB_CUDA, frame_Undist_CUDA;
 
     // TODO: Fix up color correction
-    // cv::cuda::cvtColor(frame_CUDA, frame_RGB_CUDA, cv::CV_BAYer)
-    cv::cuda::remap(frame_CUDA, frame_Undist_CUDA, xmap_CUDA, ymap_CUDA, cv::InterpolationFlags::INTER_LINEAR);
+    cv::cuda::cvtColor(frame_CUDA, frame_RGB_CUDA, cv::COLOR_BayerRG2RGB);
+    cv::cuda::remap(frame_RGB_CUDA, frame_Undist_CUDA, xmap_CUDA, ymap_CUDA, cv::InterpolationFlags::INTER_LINEAR);
 
     frame_Undist_CUDA.download(frameOut);
+#else
+    cv::cvtColor(frame, preProcTemp, cv::COLOR_BayerBG2BGR);
+    cv::remap(preProcTemp, frameOut, xmap, ymap, cv::InterpolationFlags::INTER_LINEAR);
+#endif // ifdef USE_CUDA_PRE
 }
 
 ClassicalStereo::ClassicalStereo(std::string lCalibrationFile, std::string rCalibrationFile, double baseline, cv::Ptr<cv::Feature2D>& featureDetector, cv::Ptr<cv::DescriptorMatcher>& descriptorMatcher) : 

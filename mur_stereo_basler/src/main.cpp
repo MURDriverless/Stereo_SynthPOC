@@ -15,7 +15,7 @@
 #endif
 
 const std::string CAMARA_NAME_L = "CameraLeft (40068492)";
-const std::string CAMARA_NAME_R = "CameraLeft (40068492)";
+const std::string CAMARA_NAME_R = "CameraRight (40061679)";
 
 unsigned int grabCount = 6000;
 
@@ -57,12 +57,13 @@ int main(int argc, char** argv) {
     int exitCode = 0;
     try {
         camera1->setup(CAMARA_NAME_L);
-        // camera2->setup(CAMARA_NAME_R);
+        camera2->setup(CAMARA_NAME_R);
 
         camera1->startGrabbing(grabCount);
+        camera2->startGrabbing(grabCount);
         unsigned long imageCount = 0;
 
-        while (imageCount < grabCount && camera1->isGrabbing()) {
+        while (imageCount < grabCount && camera1->isGrabbing() && camera2->isGrabbing()) {
             // Wait for an image and then retrieve it. A timeout of 5000 ms is used.
             int height1;
             int width1;
@@ -73,13 +74,36 @@ int main(int argc, char** argv) {
             uint8_t* buffer2;
 
             bool ret1 = camera1->retreiveResult(height1, width1, buffer1);
-            // bool ret2 = camera2->retreiveResult(height2, width2, buffer2);
+            bool ret2 = camera2->retreiveResult(height2, width2, buffer2);
 
-            if (ret1) {
-                cv::Mat inMat = cv::Mat(height1, width1, CV_8UC1, buffer1);
-                cv::imshow("ehh", inMat);
-                cv::waitKey(1);
+            if (ret1 && ret2) {
+                cv::Mat camMatL = cv::Mat(height1, width1, CV_8UC1, buffer1);
+                cv::Mat camMatR = cv::Mat(height2, width2, CV_8UC1, buffer2);
+
+                // Start Proc Block
+                cv::Mat lUnDist, rUnDist;
+                classical.preprocessFramePair(camMatL, camMatR, lUnDist, rUnDist);
+
+                std::vector<ConeROI> coneROIs;
+                detectors.detectFrame(lUnDist, coneROIs, previewArgs);
+
+                std::vector<ConeEst> coneEsts;
+                classical.estConePos(lUnDist, rUnDist, coneROIs, coneEsts, imageCount, previewArgs);
             }
+
+            #ifdef PREVIEW
+            cv::imshow("Camera_Undist1", lFrameBBox);
+            cv::resizeWindow("Camera_Undist1", 1000, 600);
+            cv::waitKey(1);
+
+            cv::imshow("Camera_Undist2", rFrameBBox);
+            cv::resizeWindow("Camera_Undist2", 1000, 600);
+            cv::waitKey(1);
+
+            // cv::imshow("Matches", matchesPreview);
+            // cv::resizeWindow("Camera_Undist2", 1000, 600);
+            // cv::waitKey(1);
+            #endif /* PREVIEW */
 
             imageCount++;
         }

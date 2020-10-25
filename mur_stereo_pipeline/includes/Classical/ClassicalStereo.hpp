@@ -31,6 +31,8 @@ class ClassicalStereo {
                 cv::Mat xmap, ymap;
                 cv::cuda::GpuMat xmap_CUDA, ymap_CUDA;
 
+                cv::Mat preProcTemp;
+
                 CameraParams(const std::string& calibrationFile);
                 void preprocessFrame(const cv::Mat& frame, cv::Mat& frameOut);
         };

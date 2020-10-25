@@ -40,9 +40,8 @@ class PylonCam: public IGeniCam {
 
             camera.Open();
             GenApi::INodeMap& nodemap = camera.GetNodeMap();
-            // Pylon::CEnumParameter(nodemap, "PixelFormat").Se'tValue("BayerBG8");
-            Pylon::CBooleanParameter(nodemap, "AcquisitionFrameRateEnable").SetValue(false);
-            // camera.LightSourcePreset.SetValue(Basler_UniversalCameraParams::LightSourcePresetEnums::LightSourcePreset_Daylight6500K);
+            Pylon::CEnumParameter(nodemap, "PixelFormat").SetValue("BayerRG8");
+            Pylon::CEnumParameter(nodemap, "BslLightSourcePreset").SetValue("Tungsten");
 
             // // Select auto function ROI 2
             // Pylon::CEnumParameter(nodemap, "AutoFunctionROISelector").SetValue("ROI2");
