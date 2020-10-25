@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
     #endif /* PREVIEW */
 
     // Prep Classical
-    std::string lCalibPath = std::string(SRC_ROOT_PATH).append("../calibration.xml");
-    std::string rCalibPath = std::string(SRC_ROOT_PATH).append("../calibration.xml");
+    std::string lCalibPath = std::string(SRC_ROOT_PATH).append("../calibration_real.xml");
+    std::string rCalibPath = std::string(SRC_ROOT_PATH).append("../calibration_real.xml");
 
     const double baseline = 200.00;
     cv::Ptr<cv::Feature2D> featureDetector = cv::xfeatures2d::SIFT::create();
@@ -100,9 +100,11 @@ int main(int argc, char** argv) {
             cv::resizeWindow("Camera_Undist2", 1000, 600);
             cv::waitKey(1);
 
-            // cv::imshow("Matches", matchesPreview);
-            // cv::resizeWindow("Camera_Undist2", 1000, 600);
-            // cv::waitKey(1);
+            if (matchesPreview.size().width > 0) {
+                cv::imshow("Matches", matchesPreview);
+                cv::resizeWindow("Camera_Undist2", 1000, 600);
+                cv::waitKey(1);
+            }
             #endif /* PREVIEW */
 
             imageCount++;

@@ -127,6 +127,7 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
         bool ret = cv::solvePnP(conePts, keyPts, lCamParams.cameraMatrix, lCamParams.distCoeffs, rvec, tvec, false, cv::SolvePnPMethod::SOLVEPNP_IPPE);
         if (true) {
             est_depth = tvec.at<double>(2, 0);
+            std::cout << "Mono depth: " << est_depth << std::endl;
 
             // Using reference shouldnt cause performance degredation?
             const double &f1 = lCamParams.focal_px_x;
@@ -164,6 +165,10 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
                 continue;
             }
 
+            if (previewArgs.valid) {
+                cv::rectangle(*(previewArgs.rFrameBBoxMatPtr), projRect, cv::Scalar(255, 255, 255));
+            }
+
             cv::Mat unDist1_cropped = lFrame(coneROI.roiRect);
             cv::Mat unDist2_cropped = rFrame(projRect);
 
@@ -189,7 +194,7 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             descriptorMatcher->match(descriptors1, descriptors2, matches);
 
             // Filters for horizontal-ish matches only
-            uint32_t yDelta = projRect.height * 0.1;
+            uint32_t yDelta = projRect.height * 100;
             for (const cv::DMatch &match : matches) {
                 if (abs(featureKeypoints1[match.queryIdx].pt.y - featureKeypoints2[match.trainIdx].pt.y) < yDelta) {
                     matchesFilt.push_back(match);
@@ -222,9 +227,9 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             float xEst = -zEst*(coneROI.roiRect.x + coneROI.roiRect.width/2 - rImgCenter_x)/f1;
             float yEst = -zEst*(coneROI.roiRect.y + coneROI.roiRect.height - rImgCenter_y)/f1;
 
-            if (abs(est_depth - zEst) > 1500) {
-                continue;
-            }
+            // if (abs(est_depth - zEst) > 1500) {
+            //     continue;
+            // }
 
             if (zEst < 0) {
                 continue;
@@ -239,7 +244,7 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             coneEsts.push_back(coneEst);
 
             if (previewArgs.valid) {
-                cv::rectangle(*(previewArgs.rFrameBBoxMatPtr), projRect, cv::Scalar(255, 255, 255));
+                // cv::rectangle(*(previewArgs.rFrameBBoxMatPtr), projRect, cv::Scalar(255, 255, 255));
 
                 if (i == 0) {
                     cv::drawMatches(unDist1_cropped, featureKeypoints1, unDist2_cropped, featureKeypoints2, matchesFilt, *(previewArgs.matchesMatPtr));
