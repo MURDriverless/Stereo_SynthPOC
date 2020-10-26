@@ -1,24 +1,23 @@
 <?xml version="1.0"?>
 <opencv_storage>
 <!--
-Calibration date: Sun Oct 25 16:55:10 2020
-Number of frames: 99
-RMS: 3.0816
+Manually Created for synthetic Blender, 8mm sensor size with 5mm focal length
 -->
 <cameraMatrix type_id="opencv-matrix">
   <rows>3</rows>
   <cols>3</cols>
   <dt>d</dt>
   <data>
-    1.5413919148551477e+03 0. 9.5883283882286185e+02 0.
-    1.5385012452341846e+03 5.6289844830627669e+02 0. 0. 1.</data></cameraMatrix>
+    1449 0. 960. 0.
+    1449 600. 0. 0. 1.</data></cameraMatrix>
 <distCoeffs type_id="opencv-matrix">
   <rows>1</rows>
   <cols>5</cols>
   <dt>d</dt>
   <data>
-    -1.0510348985655855e-01 1.8380598218946734e-01 0. 0.
-    1.8567856830260108e-02</data></distCoeffs>
+    0.0 0.0
+    0.0 0.0
+    0.0</data></distCoeffs>
 <calibImageSize>
   1920 1200</calibImageSize>
 </opencv_storage>
