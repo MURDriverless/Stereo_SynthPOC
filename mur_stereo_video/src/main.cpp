@@ -20,7 +20,7 @@
 
 #include "StereoBench.hpp"
 
-// #define PREVIEW
+#define PREVIEW
 
 struct FrameBuffer {
     std::mutex mutexLock;
@@ -140,6 +140,14 @@ int main(int argc, char** argv) {
 
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        if (lastFrame > 100) {
+            cv::imwrite("l_frame.png", lFrameBBox);
+            cv::imwrite("r_frame.png", rFrameBBox);
+            cv::imwrite("m_frame.png", matchesPreview);
+
+            return 0;
+        }
     }
 
     cv::destroyAllWindows();
