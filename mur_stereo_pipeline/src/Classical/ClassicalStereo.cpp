@@ -133,10 +133,13 @@ void ClassicalStereo::estConePos(const cv::Mat& lFrame, const cv::Mat& rFrame, c
             const double &f1 = lCamParams.focal_px_x;
             const double &f2 = rCamParams.focal_px_x;
 
-            const double &lImgCenter_x = lCamParams.imgCenter_x;
-            const double &rImgCenter_x = rCamParams.imgCenter_x;
+\
+            #pragma message (ImgCenter is hard coded in ClassicalStereo::estConePos)
+            // TODO: remove hardcode
+            const double &lImgCenter_x = 1920/2;
+            const double &rImgCenter_x = 1920/2;
 
-            const double &rImgCenter_y = rCamParams.imgCenter_y;
+            const double &rImgCenter_y = 1200/2;
 
             // TODO? : Enlarge borders around cones?
             // float border = 0.0f;

@@ -3,6 +3,9 @@ Currently used as a playground for testing and benchmarking of the stereo pipeli
 
 **Will be removed in the future once integrated with original repo**
 
+## Warnings
+ - `ClassicalStereo::estConePos` have hard coded image center for `1920 x 1200` images
+
 ## Requirements/Compiled with
  - `CUDA` 10.0
  - `CUDNN` 7.6.3
@@ -43,4 +46,7 @@ sudo ldconfig
    - "Supported", but geometry is not programmed.
    - Think of a more elegant way to do it? Kinda "Hacky" right now.
  - [ ] Reintegrate with existing repo
+   - This is probably the new repo, need a better name
+ - [ ] Remove hard coded values in `ClassicalStereo::estConePos`
+ - [ ] Make stereo rig setup values a launch arg, rather than hard codes
  - [x] Find out why `catkin build` does not work?
